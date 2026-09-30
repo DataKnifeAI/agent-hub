@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>agent-hub — DataKnifeAI skills, plugins, and extensions</title>
+    <meta
+      name="description"
+      content="Find and install DataKnifeAI agent skills, plugins, and editor extensions for Cursor, GitHub Copilot, VS Code, Claude Code, and SKILL.md-compatible agents."
+    />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="assets/favicon-64.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <div class="mock-banner" role="note">
+      <div class="wrap">
+        <strong>Review mock</strong> — not deployed. Skill install commands work today against
+        <a href="https://github.com/DataKnifeAI/agent-skills">agent-skills</a>; items marked
+        <span class="status status-design">Proposed</span> don't exist yet.
+      </div>
+    </div>
+
+    <header class="site-header">
+      <div class="wrap header-row">
+        <a class="brand" href="./">
+          <img src="assets/dataknifeai-logo-384.png" alt="" width="32" height="32" />
+          <span>DataKnife<em>AI</em></span>
+          <span class="brand-sub">agent-hub</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#skills">Skills</a>
+          <a href="#extensions">Plugins &amp; extensions</a>
+          <a href="#tools">Tools</a>
+          <a href="#install">Install</a>
+          <a href="https://github.com/DataKnifeAI/agent-skills">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">agent-hub · tooling surface</p>
+            <h1>Every DataKnifeAI skill, installed into the tool you use.</h1>
+            <p class="lede">
+              One catalog for the org's agent skills, plugins, and editor extensions. Pick your tool, copy
+              one command, and every workspace gets the same skills from
+              <a href="https://github.com/DataKnifeAI/agent-skills">agent-skills</a>.
+            </p>
+          </div>
+
+          <div class="installer" aria-labelledby="installer-title">
+            <h2 id="installer-title" class="installer-title">Install for</h2>
+            <div class="tool-picker" id="tool-picker" role="tablist" aria-label="Target tool"></div>
+            <div class="scope" id="scope" role="group" aria-label="Install scope">
+              <button type="button" data-scope="user">User <span>all projects</span></button>
+              <button type="button" data-scope="project">Project <span>commit to repo</span></button>
+            </div>
+            <div class="cmd" id="hero-copy">
+              <pre id="hero-cmd"></pre>
+            </div>
+            <p class="cmd-caption" id="hero-caption"></p>
+            <dl class="stats">
+              <div><dt data-skill-count>0</dt><dd>skills</dd></div>
+              <div><dt data-addon-count>0</dt><dd>add-ons</dd></div>
+              <div><dt data-tool-count>0</dt><dd>tools</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap section" id="skills" aria-labelledby="skills-title">
+        <header class="section-head">
+          <h2 id="skills-title">Skills</h2>
+          <p>
+            <code>SKILL.md</code> folders from agent-skills. Install buttons target
+            <strong data-tool-name>Cursor</strong>.
+          </p>
+        </header>
+        <div class="toolbar">
+          <label class="search">
+            <span class="sr">Search skills</span>
+            <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M10.68 11.74a6 6 0 1 1 1.06-1.06l3.04 3.04a.75.75 0 1 1-1.06 1.06ZM11.5 7a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/></svg>
+            <input id="skill-search" type="search" placeholder="Search skills, CLIs…" autocomplete="off" />
+          </label>
+          <div class="tabs" id="category-tabs" role="tablist" aria-label="Skill category"></div>
+        </div>
+        <div class="card-grid" id="skill-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="wrap section" id="extensions" aria-labelledby="extensions-title">
+        <header class="section-head">
+          <h2 id="extensions-title">Plugins &amp; extensions</h2>
+          <p>
+            Everything beyond a single skill, filtered for <strong data-tool-name>Cursor</strong>.
+          </p>
+        </header>
+        <div class="toolbar">
+          <div class="tabs" id="addon-tabs" role="tablist" aria-label="Add-on type"></div>
+        </div>
+        <p class="addon-intro" id="addon-intro"></p>
+        <div class="card-grid" id="addon-grid" aria-live="polite"></div>
+
+        <article class="layout-card" id="plugin-layout">
+          <div>
+            <p class="feature-kicker">Proposed · plugin layout</p>
+            <h3>One folder, two manifests</h3>
+            <p>
+              Cursor and Claude Code plugins share the same structure. Each plugin lives under
+              <code>plugins/&lt;name&gt;/</code> in agent-hub and pulls skills from agent-skills, so
+              there's still one source of truth. A marketplace file at the repo root lets Claude
+              Code install straight from GitHub.
+            </p>
+          </div>
+          <pre class="code"><code>agent-hub/
+├── <span class="k">.claude-plugin/marketplace.json</span>   <span class="c"># lists plugins/*</span>
+└── plugins/
+    └── dataknifeai/
+        ├── <span class="k">.cursor-plugin/plugin.json</span>
+        ├── <span class="k">.claude-plugin/plugin.json</span>
+        ├── skills/  <span class="c">→ agent-skills/skills</span>
+        ├── rules/   <span class="c"># conventional commits, small MRs</span>
+        ├── commands/
+        └── <span class="k">.mcp.json</span>    <span class="c"># templates, secrets via env</span></code></pre>
+        </article>
+      </section>
+
+      <section class="wrap section" id="tools" aria-labelledby="tools-title">
+        <header class="section-head">
+          <h2 id="tools-title">Supported tools</h2>
+          <p>Where each tool looks for skills, and what else it can install.</p>
+        </header>
+        <div class="tool-grid" id="tool-grid"></div>
+      </section>
+
+      <section class="wrap section" id="install" aria-labelledby="install-title">
+        <header class="section-head">
+          <h2 id="install-title">Other ways to install</h2>
+          <p>The one-liner above wraps <code>scripts/install-skills.sh</code>. These work too.</p>
+        </header>
+        <div class="method-grid">
+          <article>
+            <h3>Makefile</h3>
+            <p>From a checkout of agent-skills. Symlinks into <code>./.cursor/skills</code> by default.</p>
+            <pre class="code"><code>make install
+make install-user
+make install ONLY=gh-cli,kubectl-cli</code></pre>
+          </article>
+          <article>
+            <h3>Installer script</h3>
+            <p>Point <code>--target</code> at any tool's skills folder. Add <code>--copy</code> for committed installs.</p>
+            <pre class="code"><code>./scripts/install-skills.sh --target .claude/skills
+./scripts/install-skills.sh --target .github/skills --copy
+./scripts/install-skills.sh --dry-run</code></pre>
+          </article>
+          <article>
+            <h3>Workspace baseline</h3>
+            <p>
+              <a href="https://github.com/DataKnifeAI/agent-workspace">agent-workspace</a> vendors
+              agent-skills as a submodule for Cloud Agent pools and Coder workspaces.
+            </p>
+            <pre class="code"><code>git clone --recurse-submodules \
+  https://github.com/DataKnifeAI/agent-workspace.git</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="wrap section" aria-labelledby="contribute-title">
+        <header class="section-head">
+          <h2 id="contribute-title">Add to the hub</h2>
+          <p>
+            Shared first, product-specific last, per
+            <a href="https://github.com/DataKnifeAI/.github/blob/main/docs/PROJECT_SETUP.md">PROJECT_SETUP</a>.
+          </p>
+        </header>
+        <ol class="steps">
+          <li><span>Skill</span>Add <code>skills/&lt;name&gt;/SKILL.md</code> to agent-skills with <code>name</code> and <code>description</code> frontmatter. Run <code>make validate</code>.</li>
+          <li><span>Plugin</span>Bundle skills, rules, and MCP templates under <code>plugins/&lt;name&gt;/</code> in agent-hub with both manifests.</li>
+          <li><span>Catalog</span>Add the entry to <code>catalog.js</code> here. One skill, plugin, or extension per PR.</li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-row">
+        <p>
+          <strong>DataKnifeAI</strong> · Skills live in
+          <a href="https://github.com/DataKnifeAI/agent-skills">agent-skills</a>; this hub is the front door.
+          Mirrors on <a href="https://gitlab.com/dk-raas/dkai">GitLab</a>.
+        </p>
+        <p class="muted">Tool names are integrations, not endorsements. Paths follow each tool's published docs.</p>
+      </div>
+    </footer>
+
+    <dialog class="dialog" id="install-dialog" aria-labelledby="dlg-title">
+      <div class="dialog-body">
+        <header>
+          <div>
+            <h2 id="dlg-title"></h2>
+            <p id="dlg-sub"></p>
+          </div>
+          <button type="button" class="dialog-close" id="dlg-close" aria-label="Close">×</button>
+        </header>
+        <div class="tabs" id="dlg-tabs" role="tablist" aria-label="Action"></div>
+        <div class="cmd" id="dlg-copy">
+          <pre id="dlg-cmd"></pre>
+        </div>
+        <p class="dialog-links" id="dlg-links"></p>
+      </div>
+    </dialog>
+
+    <script src="catalog.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
