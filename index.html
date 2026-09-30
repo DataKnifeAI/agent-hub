@@ -9,8 +9,13 @@
       content="Find and install DataKnifeAI agent skills, plugins, and editor extensions for Cursor, GitHub Copilot, VS Code, Claude Code, and SKILL.md-compatible agents."
     />
     <meta name="theme-color" content="#0a0b0c" />
-    <meta name="robots" content="noindex" />
     <link rel="icon" href="assets/favicon-64.png" type="image/png" />
+    <link rel="canonical" href="https://dataknifeai.github.io/agent-hub/" />
+    <meta property="og:title" content="agent-hub · DataKnifeAI" />
+    <meta property="og:description" content="Install DataKnifeAI agent skills, plugins, and editor extensions into the tool you use." />
+    <meta property="og:url" content="https://dataknifeai.github.io/agent-hub/" />
+    <meta property="og:image" content="https://dataknifeai.github.io/agent-hub/assets/dataknifeai-logo-384.png" />
+    <meta property="og:type" content="website" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -18,9 +23,9 @@
 
     <div class="mock-banner" role="note">
       <div class="wrap">
-        <strong>Review mock</strong> — not deployed. Skill install commands work today against
-        <a href="https://github.com/DataKnifeAI/agent-skills">agent-skills</a>; items marked
-        <span class="status status-design">Proposed</span> don't exist yet.
+        <strong>Preview</strong> — skill and extension installs work today. Plugins marked
+        <span class="status status-design">Proposed</span> are still being packaged; follow
+        <a href="https://github.com/DataKnifeAI/agent-hub">agent-hub</a> for progress.
       </div>
     </div>
 
@@ -109,24 +114,31 @@
         <article class="layout-card" id="plugin-layout">
           <div>
             <p class="feature-kicker">Proposed · plugin layout</p>
-            <h3>One folder, two manifests</h3>
+            <h3>One folder, every tool</h3>
             <p>
-              Cursor and Claude Code plugins share the same structure. Each plugin lives under
-              <code>plugins/&lt;name&gt;/</code> in agent-hub and pulls skills from agent-skills, so
-              there's still one source of truth. A marketplace file at the repo root lets Claude
-              Code install straight from GitHub.
+              A root <code>plugin.json</code> follows the open
+              <a href="https://agent-plugins.org">Agent Plugins</a> standard, which Cursor, VS Code,
+              and Copilot load directly. Cursor and Claude manifests sit alongside it for rules and
+              Claude-specific pieces. Two marketplace files let every tool install straight from
+              this repo.
+            </p>
+            <p>
+              Skills are copied in from agent-skills by CI rather than symlinked, because tools
+              reject plugin files that resolve outside the plugin folder. agent-skills stays the
+              single source of truth.
             </p>
           </div>
           <pre class="code"><code>agent-hub/
-├── <span class="k">.claude-plugin/marketplace.json</span>   <span class="c"># lists plugins/*</span>
+├── <span class="k">.claude-plugin/marketplace.json</span>  <span class="c"># Claude, Copilot CLI, VS Code</span>
+├── <span class="k">.cursor-plugin/marketplace.json</span>  <span class="c"># Cursor</span>
 └── plugins/
     └── dataknifeai/
+        ├── <span class="k">plugin.json</span>               <span class="c"># Agent Plugins 1.0</span>
         ├── <span class="k">.cursor-plugin/plugin.json</span>
         ├── <span class="k">.claude-plugin/plugin.json</span>
-        ├── skills/  <span class="c">→ agent-skills/skills</span>
-        ├── rules/   <span class="c"># conventional commits, small MRs</span>
-        ├── commands/
-        └── <span class="k">.mcp.json</span>    <span class="c"># templates, secrets via env</span></code></pre>
+        ├── skills/   <span class="c"># copied from agent-skills by CI</span>
+        ├── rules/    <span class="c"># conventional commits, small MRs</span>
+        └── <span class="k">mcp.json</span>      <span class="c"># templates, secrets via env</span></code></pre>
         </article>
       </section>
 
@@ -180,7 +192,7 @@ make install ONLY=gh-cli,kubectl-cli</code></pre>
         </header>
         <ol class="steps">
           <li><span>Skill</span>Add <code>skills/&lt;name&gt;/SKILL.md</code> to agent-skills with <code>name</code> and <code>description</code> frontmatter. Run <code>make validate</code>.</li>
-          <li><span>Plugin</span>Bundle skills, rules, and MCP templates under <code>plugins/&lt;name&gt;/</code> in agent-hub with both manifests.</li>
+          <li><span>Plugin</span>Bundle skills, rules, and MCP templates under <code>plugins/&lt;name&gt;/</code> in agent-hub with a root <code>plugin.json</code> plus Cursor and Claude manifests.</li>
           <li><span>Catalog</span>Add the entry to <code>catalog.js</code> here. One skill, plugin, or extension per PR.</li>
         </ol>
       </section>
@@ -190,8 +202,9 @@ make install ONLY=gh-cli,kubectl-cli</code></pre>
       <div class="wrap footer-row">
         <p>
           <strong>DataKnifeAI</strong> · Skills live in
-          <a href="https://github.com/DataKnifeAI/agent-skills">agent-skills</a>; this hub is the front door.
-          Mirrors on <a href="https://gitlab.com/dk-raas/dkai">GitLab</a>.
+          <a href="https://github.com/DataKnifeAI/agent-skills">agent-skills</a>; this hub is the front door
+          (<a href="https://github.com/DataKnifeAI/agent-hub">source</a>).
+          More at <a href="https://dataknife.ai">dataknife.ai</a>.
         </p>
         <p class="muted">Tool names are integrations, not endorsements. Paths follow each tool's published docs.</p>
       </div>

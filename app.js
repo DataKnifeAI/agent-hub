@@ -47,9 +47,17 @@
     };
   }
 
+  const pluginUsesProject = (tool) => state.scope === "project" && !!tool.plugin.project;
+
   function pluginCommands(tool, name) {
     const p = tool.plugin;
-    return { install: p.install(name), update: p.update(name), remove: p.remove(name) };
+    const cmds = {
+      install: pluginUsesProject(tool) ? p.project(name) : p.install(name),
+      update: p.update(name),
+      remove: p.remove(name),
+    };
+    if (p.list) cmds.list = p.list();
+    return cmds;
   }
 
   const extensionId = (tool, ext) => ext.ids[tool.id] || ext.ids.default;
@@ -239,7 +247,7 @@
     if (state.addon === "plugins") {
       intro.innerHTML = tool.plugin
         ? `${tool.plugin.how} <a href="${tool.plugin.docs}">Plugin docs</a>`
-        : "Plugins bundle skills, rules, commands, and MCP configs into one install. Cursor and Claude Code share the same layout, so one plugin folder ships both manifests.";
+        : "Plugins bundle skills, rules, and MCP configs into one install. Each DataKnifeAI plugin ships manifests for Agent Plugins, Cursor, and Claude, so one folder works everywhere.";
       const cards = plugins.map((p) => {
         const card = el("article", { class: "item-card" }, `
           <header>
@@ -256,7 +264,7 @@
         $("button", card)?.addEventListener("click", () =>
           openDialog({
             title: p.title,
-            sub: `${tool.name} plugin · <code>${p.name}</code>`,
+            sub: `${tool.name} plugin · <code>${p.name}</code>${pluginUsesProject(tool) ? " · project scope, commit to repo" : ""}`,
             commands: pluginCommands(tool, p.name),
             links: [{ href: tool.plugin.docs, label: `${tool.name} plugin docs` }, { href: "#plugin-layout", label: "Plugin layout" }],
           })
