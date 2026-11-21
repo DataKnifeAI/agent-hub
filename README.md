@@ -1,5 +1,8 @@
 # agent-hub
 
+![agent-hub — skill crystals and plugin tiles at the agent tooling front door](docs/assets/agent-hub-hero.jpg)
+
+
 Front door for DataKnifeAI agent tooling: browse and install skills, plugins, and editor extensions for Cursor, GitHub Copilot, VS Code, Claude Code, SKILL.md-compatible agents, and Coder / Cloud Agent workspaces.
 
 Live at [dataknifeai.github.io/agent-hub](https://dataknifeai.github.io/agent-hub/) (preview).
